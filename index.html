@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script src="customers.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
     <script src="livevalidation_standalone.compressed.js"></script>
     <script src="validation.js"></script>
@@ -11,7 +12,7 @@
 <body>
     Voer de postcode in van uw bedrijf:
     <input id="postcode" type="text" size="6" maxlength="6" title="Postcode">
-    <input id="button" type="button" value="OK" title="OK" onclick="loadMap()"><br>
+    <input id="button" type="button" value="OK" title="OK" onclick="reLoadMap()"><br>
     <span id="msg"></span>
 
     <div id="googleMap" style="width:99%;height:90%;height:90vh;width:99vw;margin:0"></div>

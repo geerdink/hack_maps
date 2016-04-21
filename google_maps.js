@@ -1,68 +1,3 @@
-// First, create an object containing LatLng and revenue for each customer.
-var customers = {
-    1: {
-        postal_code: "3454+LD",
-        revenue: 2714856,
-        location: {lat: 52.0823742, lng: 5.0764477}
-    },
-    2: {
-        postal_code: "3455+AB",
-        revenue: 8405837,
-        location: {lat: 52.1823742, lng: 5.1764477}
-    },
-    3: {
-        postal_code: "3456+AB",
-        revenue: 3857799,
-        location: {lat: 52.0823742, lng: 5.1764477}
-    },
-    4: {
-        postal_code: "3457+AA",
-        revenue: 603502,
-        location: {lat: 52.1823742, lng: 5.0764477}
-    }
-};
-
-function getCustomers() {
-    for (var key in customers) {
-        if (!customers.hasOwnProperty(key)) continue;
-
-        var customer = customers[key];
-        var url = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyBL_3_jVj683n24Fm9zQZxnj9HjdrNCSSg&address=" + customer.postal_code + "+Netherlands"
-
-        $.ajax({
-            async: true,
-            type: "GET",
-            url: url,
-            success: function (response) {
-               //processResponse(response, key)
-            }
-        });
-    }
-}
-
-function processResponse(json, key) {
-    console.log(json.results[1].geometry.location.lat);
-    customers[key].location = json.results[1].geometry.location;
-}
-
-function readTextFile(file)
-{
-    var rawFile = new XMLHttpRequest();
-    rawFile.open("GET", file, true);
-    rawFile.onreadystatechange = function ()
-    {
-        if(rawFile.readyState === 4)
-        {
-            if(rawFile.status === 200 || rawFile.status == 0)
-            {
-                var allText = rawFile.responseText;
-                alert(allText);
-            }
-        }
-    }
-    rawFile.send(null);
-}
-
 function Get(url){
     var request = new XMLHttpRequest();
     request.open("GET",url,false);
@@ -70,16 +5,37 @@ function Get(url){
     return request.responseText;
 }
 
-function initMap(postalCode) {
-    // location of company
-    var json = Get("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyBL_3_jVj683n24Fm9zQZxnj9HjdrNCSSg&address=" + postalCode + "+Netherlands")
-    var parsed = JSON.parse(json)
-    var location = parsed.results[1].geometry.location
+function initMap() {
+    console.log("initMap");
+    loadMap("3454+LD");
+}
+
+function loadMap(postalCode) {
+    console.log("initMap(" + postalCode + ")");
+
+    var json = Get("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyBL_3_jVj683n24Fm9zQZxnj9HjdrNCSSg&address=" + postalCode + "+Netherlands");
+    console.log(json);
+
+    var parsed = JSON.parse(json);
+    var location = parsed.results[1].geometry.location;
+
+    createMap(location)
+}
+
+function createMap(location) {
+    console.log("createMap");
 
     // Create a map object and specify the DOM element for display.
     var map = new google.maps.Map(document.getElementById('googleMap'), {
         center: location,
         zoom: 10
+    });
+
+    google.maps.event.addListener(map, "rightclick", function(event) {
+        var lat = event.latLng.lat();
+        var lng = event.latLng.lng();
+
+        createMap(new google.maps.LatLng(lat, lng))
     });
 
     // Create a marker and set its position.
@@ -90,7 +46,7 @@ function initMap(postalCode) {
     });
 
     // Construct the circle for each value in customers.
-    // Note: We scale the area of the circle based on the population.
+    // We scale the area of the circle based on the revenue.
     for (var c in customers) {
         //if (!customers.hasOwnProperty(key)) continue;
         //var customer = customers[key];
@@ -102,15 +58,14 @@ function initMap(postalCode) {
             fillColor: '#FF0000',
             fillOpacity: 0.35,
             map: map,
-            //center: citymap[city].center,
-            center: customers[c].location,
+            center: new google.maps.LatLng(customers[c].lat, customers[c].lng),
             radius: Math.sqrt(customers[c].revenue) * 2
         });
     }
 }
 
-function loadMap() {
-    console.log("loadMap");
+function reLoadMap() {
+    console.log("reLoadMap");
 
     var postalCode = $('#postcode').val();
     if (postalCode.length == 6) {
@@ -120,5 +75,4 @@ function loadMap() {
     }
 }
 
-//google.maps.event.addDomListener(window, 'load', getCustomers);
-//google.maps.event.addDomListener(window, 'load', initMap);
+//google.maps.event.addDomListener(window, 'load', initMap());
