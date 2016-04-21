@@ -1,0 +1,1 @@
+var customers = [{postal_code:"3454LD",revenue:2714856,lat:52.0785873,lng:5.0347862},{postal_code:"7751DX",revenue:8405837,lat:52.693364,lng:6.742176400000001},{postal_code:"9725GV",revenue:3857799,lat:53.2084509,lng:6.5684656},];

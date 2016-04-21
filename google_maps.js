@@ -25,7 +25,6 @@ function loadMap(postalCode) {
 function createMap(location) {
     console.log("createMap");
 
-    // Create a map object and specify the DOM element for display.
     var map = new google.maps.Map(document.getElementById('googleMap'), {
         center: location,
         zoom: 10
@@ -48,9 +47,6 @@ function createMap(location) {
     // Construct the circle for each value in customers.
     // We scale the area of the circle based on the revenue.
     for (var c in customers) {
-        //if (!customers.hasOwnProperty(key)) continue;
-        //var customer = customers[key];
-        // Add the circle for this city to the map.
         var circle = new google.maps.Circle({
             strokeColor: '#FF0000',
             strokeOpacity: 0.8,
@@ -70,8 +66,6 @@ function reLoadMap() {
     var postalCode = $('#postcode').val();
     if (postalCode.length == 6) {
         initMap(postalCode.replace(" ", "+"))
-    } else {
-      //  $("#googleMap").hide();
     }
 }
 
