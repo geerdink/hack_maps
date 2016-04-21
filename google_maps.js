@@ -34,7 +34,7 @@ function getCustomers() {
             type: "GET",
             url: url,
             success: function (response) {
-               processResponse(response, key)
+               //processResponse(response, key)
             }
         });
     }
@@ -70,9 +70,9 @@ function Get(url){
     return request.responseText;
 }
 
-function initMap() {
+function initMap(postalCode) {
     // location of company
-    var json = Get("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyBL_3_jVj683n24Fm9zQZxnj9HjdrNCSSg&address=3454+LD+Netherlands")
+    var json = Get("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyBL_3_jVj683n24Fm9zQZxnj9HjdrNCSSg&address=" + postalCode + "+Netherlands")
     var parsed = JSON.parse(json)
     var location = parsed.results[1].geometry.location
 
@@ -109,5 +109,16 @@ function initMap() {
     }
 }
 
+function loadMap() {
+    console.log("loadMap");
+
+    var postalCode = $('#postcode').val();
+    if (postalCode.length == 6) {
+        initMap(postalCode.replace(" ", "+"))
+    } else {
+      //  $("#googleMap").hide();
+    }
+}
+
 //google.maps.event.addDomListener(window, 'load', getCustomers);
-google.maps.event.addDomListener(window, 'load', initMap);
+//google.maps.event.addDomListener(window, 'load', initMap);
